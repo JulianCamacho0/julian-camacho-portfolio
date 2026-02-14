@@ -2,28 +2,26 @@ import streamlit as st
 from PIL import Image, ImageFile
 from pathlib import Path
 
-path = str(Path(__file__).parent)
 
+BASE_DIR = Path(__file__).resolve().parent
 
-@st.cache_resource
-def load_image(image_path)->ImageFile:
-    '''
-    Docstring for load_image
+@st.cache_data
+def load_image(rel_path: str):
+    """
+    Carga una imagen desde una ruta relativa a este archivo.
+    Ejemplo: load_image("images/main_image.png")
+    """
+    img_path = BASE_DIR / rel_path  # Construye la ruta de forma portable
+    return Image.open(img_path)
 
-    :param image_path: Description
-    :return: Description
-    :rtype: ImageFile
-    '''
-    img = Image.open(image_path)
-    return img
 
 def home():
     st.subheader("Hi, I'm Julian Camacho — a Data Engineer and Mathematician.")
     _ , center, _ = st.columns([1,2,1])
     with center:
-        st.image(load_image(path + r"\images\main_image.png"), 
-                width=50,
-                use_container_width=True)
+        st.image(
+            load_image("images/main_image.png")
+        )
     st.divider()
     st.text('This website is my personal portfolio.')
     st.text('''
