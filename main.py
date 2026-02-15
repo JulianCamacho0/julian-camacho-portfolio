@@ -1,19 +1,12 @@
 import streamlit as st
-from PIL import Image, ImageFile
-from pathlib import Path
+from utils import *
 
+if 'utils' not in st.session_state:
+    st.session_state.utils = Utils()
 
-BASE_DIR = Path(__file__).resolve().parent
-
-@st.cache_data
-def load_image(rel_path: str):
-    """
-    Carga una imagen desde una ruta relativa a este archivo.
-    Ejemplo: load_image("images/main_image.png")
-    """
-    img_path = BASE_DIR / rel_path  # Construye la ruta de forma portable
-    return Image.open(img_path)
-
+@st.cache_resource
+def load_image(path: str):
+    return st.session_state.utils.load_image(path)
 
 def home():
     st.subheader("Hi, I'm Julian Camacho — a Data Engineer and Mathematician.")
@@ -26,8 +19,12 @@ def home():
     st.text('This website is my personal portfolio.')
     st.text('''
     Here you’ll find a collection of my work, technical projects, and the tools I’ve built. It’s designed to showcase my experience, share what I’m learning, and give you a clear view of the type of engineering I enjoy doing.
-            ''')
-
+    ''')
+    st.text('You will also find more about who I am, including my academic background, passions, skills, and professional experience.')
+    st.divider()
+    st.markdown(""" 
+        By the way, I built this entire website using Streamlit, a lightweight and powerful Python framework for building data apps. You can explore the full source code [here](https://github.com/JulianCamacho0/julian-camacho-portfolio).
+    """)
 
 if __name__ == '__main__':
 
@@ -38,6 +35,6 @@ if __name__ == '__main__':
     blog_page = st.Page('pages/blog.py', icon=':material/post:', title='Blog')
     contact_page = st.Page('pages/contact.py', icon=':material/contact_page:', title='Contact')
 
-    pg = st.navigation([home_page, about_me_page, experinece_page, projects_page, contact_page])
+    pg = st.navigation([home_page, about_me_page, projects_page, contact_page])
 
     pg.run()
